@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/edison-moreland/gonduit/models"
@@ -20,4 +21,6 @@ func main() {
 
 	dbUser, _ := models.GetUser(user1.Username)
 	fmt.Printf("%#v \n", dbUser)
+	jsonUser, _ := json.Marshal(dbUser)
+	fmt.Println(string(jsonUser))
 }
