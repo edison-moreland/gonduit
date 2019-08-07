@@ -34,7 +34,7 @@ func Login(username, password string) (models.User, error) {
 }
 
 // Logout revokes a users JWT
-func Logout(token string) error {
+func Logout(token string) {
 	// This might have more logic later
-	return jwt.Revoke(token)
+	jwt.Revoke(token)
 }

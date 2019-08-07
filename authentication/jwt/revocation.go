@@ -1,9 +1,6 @@
 package jwt
 
 import (
-	"errors"
-	"fmt"
-	"sync"
 	"time"
 )
 
@@ -12,90 +9,42 @@ import (
 // Dont judge me on this code pls
 
 // TODO: Add to viper config
-const revokedTimeToLive = time.Hour * 10
+const JWTRevokedTimeToLive = time.Hour * 10
 
-var revocationList revocationStore
-var isRevocationListInitialized = false
+var _revocationStore map[string]time.Time
+var _isRevocationStoreInitialized = false
 
-func initRevocationBackend() error {
-	if isRevocationListInitialized {
-		return errors.New("Can't reinitialize revocation store")
+func getRevocationStore() map[string]time.Time {
+	if !_isRevocationStoreInitialized {
+		_revocationStore = make(map[string]time.Time)
+		_isRevocationStoreInitialized = true
 	}
 
-	revocationList = revocationStore{internal: make(map[string]time.Time)}
-	isRevocationListInitialized = true
-
-	return nil
+	return _revocationStore
 }
 
 // Revoke adds a token to the list of revoked tokens
-func Revoke(token string) error {
-	if !isRevocationListInitialized {
-		err := initRevocationBackend()
-		if err != nil {
-			return fmt.Errorf("Could not revoke token. Reason: %v", err.Error())
-		}
-	}
-
-	revocationList.Add(token, revokedTimeToLive)
-
-	return nil
+func Revoke(token string) {
+	rs := getRevocationStore()
+	rs[token] = time.Now().Add(JWTRevokedTimeToLive)
 }
 
 // IsRevoked checks if a token has been revoked
 func IsRevoked(token string) bool {
-	if !isRevocationListInitialized {
-		err := initRevocationBackend()
-		if err != nil {
-			panic(fmt.Sprintf("Could check for revoked token. Reason: %v", err.Error()))
-		}
-	}
+	rs := getRevocationStore()
 
-	return revocationList.DoesExists(token)
-
-}
-
-// PruneRevocationList removes token that were added more than 10 hours ago
-func PruneRevocationList() error {
-	if !isRevocationListInitialized {
-		err := initRevocationBackend()
-		if err != nil {
-			return fmt.Errorf("Could check for revoked token. Reason: %v", err.Error())
-		}
-	}
-
-	revocationList.Prune()
-	return nil
-}
-
-type revocationStore struct {
-	sync.RWMutex
-	internal map[string]time.Time
-}
-
-// DoesExists check if a token has been stored
-func (rs *revocationStore) DoesExists(token string) bool {
-	rs.RLock()
-	_, ok := rs.internal[token]
-	rs.RUnlock()
+	_, ok := rs[token]
 	return ok
 }
 
-// Add puts a new token in the store
-func (rs *revocationStore) Add(token string, timeToLive time.Duration) {
-	rs.Lock()
-	rs.internal[token] = time.Now().Add(timeToLive)
-	rs.Unlock()
-}
-
-// Prune removes all expired tokens
-func (rs *revocationStore) Prune() {
-	rs.Lock()
+// PruneRevocationList removes token that were added more than 10 hours ago
+func PruneRevocationList() {
+	rs := getRevocationStore()
 	now := time.Now()
-	for token, expiration := range rs.internal {
+
+	for token, expiration := range rs {
 		if now.After(expiration) {
-			delete(rs.internal, token)
+			delete(rs, token)
 		}
 	}
-	rs.Unlock()
 }

@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/edison-moreland/gonduit/authentication/jwt"
 	"github.com/edison-moreland/gonduit/models"
@@ -26,7 +25,7 @@ func main() {
 	user1.Save()
 	println("Added user...")
 
-	userjwt, _ := jwt.Generate(&user1, []byte(jwtSigningKey), time.Hour*jwtTimeToLive)
+	userjwt, _ := jwt.Generate(&user1)
 
 	jwtuser, _ := jwt.Validate(userjwt, []byte(jwtSigningKey))
 	fmt.Printf("%#v \n", jwtuser)
