@@ -3,13 +3,20 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
+	"github.com/edison-moreland/gonduit/authentication/jwt"
 	"github.com/edison-moreland/gonduit/models"
 )
+
+// TODO: Move to Viper config
+const jwtSigningKey = "SupoerSecret"
+const jwtTimeToLive = 24 // hours
 
 func main() {
 	println("Starting...")
 
+	// Start DB
 	models.InitializeDB(":memory:")
 	defer models.StopDB()
 	println("Database initialized...")
@@ -18,6 +25,17 @@ func main() {
 	user1.UpdatePassword("Password1")
 	user1.Save()
 	println("Added user...")
+
+	userjwt, _ := jwt.Generate(&user1, []byte(jwtSigningKey), time.Hour*jwtTimeToLive)
+
+	jwtuser, _ := jwt.Validate(userjwt, []byte(jwtSigningKey))
+	fmt.Printf("%#v \n", jwtuser)
+
+	jwt.Revoke(userjwt)
+	jwtuser, err := jwt.Validate(userjwt, []byte(jwtSigningKey))
+	if err != nil {
+		println(err.Error())
+	}
 
 	dbUser, _ := models.GetUser(user1.Username)
 	fmt.Printf("%#v \n", dbUser)
