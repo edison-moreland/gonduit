@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite" // Enabel sqlite dialect
@@ -19,10 +18,6 @@ func getDB() *gorm.DB {
 	// Technically these are both recoverable, but I don't want to deal with it
 	if _dbIsInitialized == false {
 		panic("Database isn't initialized!")
-	}
-
-	if err := _db.DB().Ping(); err != nil {
-		panic(fmt.Sprintf("Could not ping database. Reason: %v", err.Error()))
 	}
 
 	return _db

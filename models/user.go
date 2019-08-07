@@ -14,6 +14,7 @@ type User struct {
 	Bio      string `json:"bio"`
 	Image    string `json:"image"` // image url?
 	Hash     string `json:"-" gorm:"not null"`
+	Token    string `json:"token" gorm:"-"`
 }
 
 // GetUser retrieves a user model from the database by it's username

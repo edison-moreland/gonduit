@@ -12,9 +12,11 @@ import (
 )
 
 const jwtUsernameClaim = "name" // Where is the username stored?
+const jwtSigningKey = "SupoerSecret"
+const jwtTimeToLive = time.Hour * 24
 
 // Generate creates and signs a new JWT
-func Generate(user *models.User, signingKey []byte, timeToLive time.Duration) (string, error) {
+func Generate(user *models.User) (string, error) {
 	// Create token
 	token := jwt.New(jwt.SigningMethodHS256)
 
@@ -22,10 +24,10 @@ func Generate(user *models.User, signingKey []byte, timeToLive time.Duration) (s
 	claims := token.Claims.(jwt.MapClaims)
 	claims[jwtUsernameClaim] = user.Username
 	//claims["admin"] = false // No admins, yet
-	claims["exp"] = time.Now().Add(timeToLive).Unix()
+	claims["exp"] = time.Now().Add(jwtTimeToLive).Unix()
 
 	// Sign token
-	tokenSigned, err := token.SignedString(signingKey)
+	tokenSigned, err := token.SignedString([]byte(jwtSigningKey))
 	if err != nil {
 		return "", fmt.Errorf("Error signing token: %#v", err.Error())
 	}
