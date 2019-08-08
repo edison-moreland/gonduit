@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"github.com/edison-moreland/gonduit/api/routes/auth"
 	"net/http"
 	"os"
 	"time"
@@ -15,6 +16,7 @@ func createRouter() *mux.Router {
 	router := mux.NewRouter()
 
 	// Routes go here
+	auth.AddRoutes(router)
 
 	return router
 }
