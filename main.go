@@ -1,43 +1,55 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-
-	"github.com/edison-moreland/gonduit/authentication/jwt"
+	"github.com/edison-moreland/gonduit/api"
 	"github.com/edison-moreland/gonduit/models"
+	"os"
+	"os/signal"
+	"time"
 )
 
 // TODO: Move to Viper config
-const jwtSigningKey = "SupoerSecret"
-const jwtTimeToLive = 24 // hours
+const apiAddress = "0.0.0.0:8080"
+const apiExistingConnectionsTimeout = 5 * time.Second
+
+func blockTillInterrupt() {
+	// Capture interrupt signal
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt)
+
+	// Wait for SIGINT
+	<-stop
+}
 
 func main() {
 	println("Starting...")
 
 	// Start DB
-	models.InitializeDB(":memory:")
+	err := models.InitializeDB(":memory:")
 	defer models.StopDB()
+	if err != nil {
+		panic(err.Error())
+	}
 	println("Database initialized...")
 
+	// Create test user
 	user1 := models.User{Username: "Bob joe", Email: "Jane@bo.com"}
-	user1.UpdatePassword("Password1")
+	_ = user1.UpdatePassword("Password1")
 	user1.Save()
 	println("Added user...")
 
-	userjwt, _ := jwt.Generate(&user1)
+	// Start https
+	server := api.StartServer(apiAddress)
+	defer func() {
+		err := api.StopServer(server, apiExistingConnectionsTimeout)
+		if err != nil {
+			panic(err.Error())
+		}
+	}()
+	println("Serving http...")
+	println("API started!")
 
-	jwtuser, _ := jwt.Validate(userjwt, []byte(jwtSigningKey))
-	fmt.Printf("%#v \n", jwtuser)
-
-	jwt.Revoke(userjwt)
-	jwtuser, err := jwt.Validate(userjwt, []byte(jwtSigningKey))
-	if err != nil {
-		println(err.Error())
-	}
-
-	dbUser, _ := models.GetUser(user1.Username)
-	fmt.Printf("%#v \n", dbUser)
-	jsonUser, _ := json.Marshal(dbUser)
-	fmt.Println(string(jsonUser))
+	// Now we wait
+	blockTillInterrupt()
+	println("SIGINT encountered, shutting down...")
 }
