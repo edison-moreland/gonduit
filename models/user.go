@@ -56,7 +56,7 @@ func (u User) CheckPassword(password string) bool {
 	return true
 }
 
-// UpdatePassword hashes a new password and updates the stored hash (DOES NOT SAVCE TO DB)
+// UpdatePassword hashes a new password and updates the stored hash (DOES NOT SAVE TO DB)
 func (u *User) UpdatePassword(newPassword string) error {
 	// hash and salt password
 	hash, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.MinCost)
@@ -69,4 +69,24 @@ func (u *User) UpdatePassword(newPassword string) error {
 	println(u.Hash)
 
 	return nil
+}
+
+// UpdateUser updates fields on the User model, does not update password. (Does not save to db)
+func (u *User) UpdateUser(newUser User) {
+	// TODO: There are libraries to merge structs, something like that should be used in the future
+
+	// Manually merge each field we care about
+	if newUser.Username != "" {
+		u.Username = newUser.Username
+	}
+	if newUser.Email != "" {
+		u.Email = newUser.Email
+	}
+	if newUser.Bio != "" {
+		u.Bio = newUser.Bio
+	}
+	if newUser.Image != "" {
+		u.Image = newUser.Image
+	}
+
 }
