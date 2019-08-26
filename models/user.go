@@ -9,7 +9,8 @@ import (
 
 // User is a database model to hold user information
 type User struct {
-	Username string `json:"username" gorm:"unique;not null;primary_key"`
+	ID       uint   `json:"-" gorm:"unique;not null;primary_key"`
+	Username string `json:"username" gorm:"unique;not null"`
 	Email    string `json:"email" gorm:"unique;not null"`
 	Bio      string `json:"bio"`
 	Image    string `json:"image"` // image url?
