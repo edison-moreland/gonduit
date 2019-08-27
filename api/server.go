@@ -16,7 +16,7 @@ func createRouter() *mux.Router {
 	router := mux.NewRouter()
 
 	// Routes go here
-	auth.AddRoutes(router)
+	auth.AddProfileRoutes(router)
 
 	return router
 }
