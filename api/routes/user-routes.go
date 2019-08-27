@@ -69,7 +69,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 	registerBody := struct {
 		User struct {
 			Username string `json:"username" validate:"required"`
-			Email    string `json:"email" validate:"required, email"`
+			Email    string `json:"email" validate:"required,email"`
 			Password string `json:"password" validate:"required"`
 		} `json:"user" validate:"required"`
 	}{}
@@ -133,9 +133,9 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	updateBody := struct {
 		User struct {
 			Username string `json:"username"`
-			Email    string `json:"email" validate:"required, email"`
+			Email    string `json:"email" validate:"omitempty,email"`
 			Bio      string `json:"email"`
-			Image    string `json:"email" validate:"url"`
+			Image    string `json:"email" validate:"omitempty,url"`
 			Password string `json:"password"`
 		} `json:"user" validate:"required"`
 	}{}
