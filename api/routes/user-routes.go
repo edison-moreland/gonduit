@@ -1,4 +1,4 @@
-package auth
+package routes
 
 import (
 	"encoding/json"
@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-func AddProfileRoutes(router *mux.Router) {
+func AddUserRoutes(router *mux.Router) {
 	router.Path("/users/login").Methods(http.MethodPost).HandlerFunc(login).Name("login")
 	router.Path("/users").Methods(http.MethodPost).HandlerFunc(register).Name("register")
 	router.Path("/user").Methods(http.MethodGet).Handler(jwt.JWTRequired(currentUser)).Name("currentuser")
