@@ -68,6 +68,9 @@ func Validate(tokenString string) (models.User, error) {
 			return models.User{}, fmt.Errorf("could not find user %v", claims["user"].(string))
 		}
 
+		// Add token to user
+		user.Token = tokenString
+
 		// JWT valid and user found
 		return user, nil
 	}
