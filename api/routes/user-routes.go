@@ -14,8 +14,8 @@ import (
 func AddUserRoutes(router *mux.Router) {
 	router.Path("/users/login").Methods(http.MethodPost).HandlerFunc(login).Name("login")
 	router.Path("/users").Methods(http.MethodPost).HandlerFunc(register).Name("register")
-	router.Path("/user").Methods(http.MethodGet).Handler(jwt.JWTRequired(currentUser)).Name("currentuser")
-	router.Path("/user").Methods(http.MethodPut).Handler(jwt.JWTRequired(updateUser)).Name("updateuser")
+	router.Path("/user").Methods(http.MethodGet).Handler(jwt.Required(currentUser)).Name("currentuser")
+	router.Path("/user").Methods(http.MethodPut).Handler(jwt.Required(updateUser)).Name("updateuser")
 }
 
 type userResponse struct {
@@ -134,8 +134,8 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 		User struct {
 			Username string `json:"username"`
 			Email    string `json:"email" validate:"omitempty,email"`
-			Bio      string `json:"email"`
-			Image    string `json:"email" validate:"omitempty,url"`
+			Bio      string `json:"bio"`
+			Image    string `json:"image" validate:"omitempty,url"`
 			Password string `json:"password"`
 		} `json:"user" validate:"required"`
 	}{}
