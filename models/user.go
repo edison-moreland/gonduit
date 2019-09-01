@@ -7,6 +7,24 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Profile is a subset of the user model meant for presentation
+type Profile struct {
+	Username string `json:"username"`
+	Bio string `json:"bio"`
+	Image string `json:"image"`
+	Following bool `json:"following"`
+}
+
+// ProfileFromUser creates a new profile object from a user
+func ProfileFromUser(u User, following bool) Profile {
+	return Profile{
+		Username:  u.Username,
+		Bio:       u.Bio,
+		Image:     u.Image,
+		Following: following,
+	}
+}
+
 // User is a database model to hold user information
 type User struct {
 	ID       uint   `json:"-" gorm:"unique;not null;primary_key"`
@@ -89,4 +107,9 @@ func (u *User) UpdateUser(newUser User) {
 		u.Image = newUser.Image
 	}
 
+}
+
+// GetProfile returns the profile for a user
+func (u *User) GetProfile(following bool) Profile {
+	return ProfileFromUser(*u, following)
 }
