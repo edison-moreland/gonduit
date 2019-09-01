@@ -34,6 +34,10 @@ type User struct {
 	Image    string `json:"image"` // image url?
 	Hash     string `json:"-" gorm:"not null"`
 	Token    string `json:"token" gorm:"-"`
+
+	// Self referencing many 2 many relationship
+	// http://gorm.io/docs/many_to_many.html
+	Following []User `json:"-" gorm:"many2many:followings;association_jointable_foreignkey:follower_id"`
 }
 
 // GetUser retrieves a user model from the database by it's username
@@ -44,9 +48,9 @@ func GetUser(username string) (User, error) {
 	user := User{} // Possible SQL injection?
 	db.Where(User{Username: username}).First(&user)
 
-	if (user == User{}) {
-		// Query returned empty user, probgably doesn't exist
-		return User{}, errors.New("User does not exist")
+	if user.Username != username {
+		// Query didn't return the correct user, probably doesn't exist
+		return User{}, errors.New("user does not exist")
 	}
 
 	return user, nil
@@ -112,4 +116,49 @@ func (u *User) UpdateUser(newUser User) {
 // GetProfile returns the profile for a user
 func (u *User) GetProfile(following bool) Profile {
 	return ProfileFromUser(*u, following)
+}
+
+// FollowUser adds a new user to this users following list
+func (u *User) FollowUser(username string) error {
+	userToFollow, err := GetUser(username)
+	if err != nil {
+		return err // User does't exist
+	}
+
+	getDB().Model(&u).Association("Following").Append(userToFollow)
+
+
+	//
+	//u.Following = append(u.Following, userToFollow)
+	return nil
+}
+
+// UnFollowUser removes a user to this users following list
+func (u *User) UnFollowUser(username string) error {
+	userToFollow, err := GetUser(username)
+	if err != nil {
+		return err // User does't exist
+	}
+
+	getDB().Model(&u).Association("Following").Delete(userToFollow)
+
+	return nil
+}
+
+// populateFollowing makes a database call to populate the "following" field of this model
+func (u *User) populateFollowing() {
+	getDB().Model(&u).Association("Following").Find(&u.Following)
+}
+
+// IsFollowingUser return bool indicating whether a user is in this users following list
+func (u *User) IsFollowingUser(username string) bool {
+	u.populateFollowing()
+
+	for _, followee := range u.Following {
+		if followee.Username == username {
+			return true
+		}
+	}
+
+	return false
 }
