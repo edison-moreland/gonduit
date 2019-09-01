@@ -32,10 +32,16 @@ func main() {
 	}
 	println("Database initialized...")
 
-	// Create test user
+	// Create test users
 	user1 := models.User{Username: "Bob joe", Email: "Jane@bo.com"}
 	_ = user1.UpdatePassword("Password1")
 	user1.Save()
+
+	user2 := models.User{Username: "Bofb joe", Email: "Janfe@bo.com"}
+	_ = user2.UpdatePassword("Password1")
+	_ = user2.FollowUser(user1.Username)
+	user2.Save()
+
 	println("Added user...")
 
 	// Start https
