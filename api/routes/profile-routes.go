@@ -31,10 +31,9 @@ func getProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// If user is logged in, find out if they're following this profile
-	loggedInUser := r.Context().Value("user").(models.User)
 	following := false
-	if loggedInUser.Username != "" {
-		following = loggedInUser.IsFollowingUser(username)
+	if jwt.UserLoggedIn(r) {
+		following = jwt.CurrentUser(r).IsFollowingUser(username)
 	}
 
 	// Generate profile
@@ -60,7 +59,7 @@ func followUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Follow user
-	loggedInUser := r.Context().Value("user").(models.User)
+	loggedInUser := jwt.CurrentUser(r)
 	err = loggedInUser.FollowUser(username)
 	if err != nil {
 		helpers.Err422(err.Error(), w)
@@ -88,7 +87,7 @@ func unfollowUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Follow user
-	loggedInUser := r.Context().Value("user").(models.User)
+	loggedInUser := jwt.CurrentUser(r)
 	err = loggedInUser.UnFollowUser(profileUser.Username)
 	if err != nil {
 		helpers.Err422(err.Error(), w)

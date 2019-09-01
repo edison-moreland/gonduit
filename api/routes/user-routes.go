@@ -114,7 +114,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 
 func currentUser(w http.ResponseWriter, r *http.Request) {
 	// Get current user from context
-	user := r.Context().Value("user").(models.User)
+	user := jwt.CurrentUser(r)
 
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(userResponse{User: user}); err != nil {
@@ -127,7 +127,7 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// Get current user from context
-	user := r.Context().Value("user").(models.User)
+	user := jwt.CurrentUser(r)
 
 	// Expected body
 	updateBody := struct {
