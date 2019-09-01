@@ -13,10 +13,11 @@ import (
 )
 
 func createRouter() *mux.Router {
-	router := mux.NewRouter()
+	router := mux.NewRouter().PathPrefix("/api/").Subrouter()
 
 	// Routes go here
 	routes.AddUserRoutes(router)
+	routes.AddProfileRoutes(router)
 
 	return router
 }
