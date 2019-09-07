@@ -6,7 +6,6 @@ import (
 	"github.com/edison-moreland/gonduit/authentication/jwt"
 	"github.com/edison-moreland/gonduit/models"
 	"github.com/gorilla/mux"
-	"gopkg.in/go-playground/validator.v9"
 	"net/http"
 )
 
@@ -32,21 +31,19 @@ func login(w http.ResponseWriter, r *http.Request) {
 		} `json:"user" validate:"required"`
 	}{}
 
-	// Unmarshal
 	err := helpers.UnmarshalRequestBody(r.Body, &loginBody)
 	if err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}
 
-	// Validate
-	err = validator.New().Struct(&loginBody)
+	err = helpers.ValidateStruct(loginBody)
 	if err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}
 
-	// Validate login, returns user model + JWT
+	// Authenticate login, returns user model + JWT
 	user, err := authentication.Login(loginBody.User.Username, loginBody.User.Password)
 	if err != nil {
 		helpers.Err422(err.Error(), w)
@@ -72,15 +69,13 @@ func register(w http.ResponseWriter, r *http.Request) {
 		} `json:"user" validate:"required"`
 	}{}
 
-	// Unmarshal
 	err := helpers.UnmarshalRequestBody(r.Body, &registerBody)
 	if err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}
 
-	// Validate
-	err = validator.New().Struct(&registerBody)
+	err = helpers.ValidateStruct(registerBody)
 	if err != nil {
 		helpers.Err422(err.Error(), w)
 		return
@@ -136,15 +131,13 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 		} `json:"user" validate:"required"`
 	}{}
 
-	// Unmarshal
 	err := helpers.UnmarshalRequestBody(r.Body, &updateBody)
 	if err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}
 
-	// Validate
-	err = validator.New().Struct(&updateBody)
+	err = helpers.ValidateStruct(updateBody)
 	if err != nil {
 		helpers.Err422(err.Error(), w)
 		return
