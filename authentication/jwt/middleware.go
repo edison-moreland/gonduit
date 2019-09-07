@@ -11,8 +11,8 @@ import (
 // Create new type for use as context key to avoid collisions
 // https://stackoverflow.com/questions/40891345/fix-should-not-use-basic-type-string-as-key-in-context-withvalue-golint
 type key int
-const userKey key = iota
 
+const userKey key = iota
 
 // Required ensures token in request and uses token to get current user
 func Required(next func(w http.ResponseWriter, r *http.Request)) http.Handler {
