@@ -9,7 +9,7 @@ import (
 // Dont judge me on this code pls
 
 // TODO: Add to viper config
-const JWTRevokedTimeToLive = time.Hour * 10
+const revokedTimeToLive = time.Hour * 10
 
 var _revocationStore map[string]time.Time
 var _isRevocationStoreInitialized = false
@@ -26,7 +26,7 @@ func getRevocationStore() map[string]time.Time {
 // Revoke adds a token to the list of revoked tokens
 func Revoke(token string) {
 	rs := getRevocationStore()
-	rs[token] = time.Now().Add(JWTRevokedTimeToLive)
+	rs[token] = time.Now().Add(revokedTimeToLive)
 }
 
 // IsRevoked checks if a token has been revoked
