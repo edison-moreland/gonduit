@@ -24,7 +24,7 @@ func UnmarshalRequestBody(body io.Reader, object interface{}) error {
 	return nil
 }
 
-// MarshalRequestBody json encodes and object to a response body and sets the status code
+// MarshalResponseBody json encodes and object to a response body and sets the status code
 func MarshalResponseBody(w http.ResponseWriter, status int, response interface{}) error {
 	w.WriteHeader(status)
 	return json.NewEncoder(w).Encode(response)
