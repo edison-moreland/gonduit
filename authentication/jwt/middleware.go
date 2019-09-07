@@ -8,6 +8,12 @@ import (
 	"github.com/edison-moreland/gonduit/models"
 )
 
+// Create new type for use as context key to avoid collisions
+// https://stackoverflow.com/questions/40891345/fix-should-not-use-basic-type-string-as-key-in-context-withvalue-golint
+type key int
+const userKey key = iota
+
+
 // Required ensures token in request and uses token to get current user
 func Required(next func(w http.ResponseWriter, r *http.Request)) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +39,7 @@ func Optional(next func(w http.ResponseWriter, r *http.Request)) http.Handler {
 		user, err := ValidateFromRequest(r)
 		if err != nil {
 			// No user logged in, add empty user to context
-			ctx := context.WithValue(r.Context(), "user", models.User{})
+			ctx := context.WithValue(r.Context(), userKey, models.User{})
 
 			next(w, r.WithContext(ctx))
 
@@ -41,7 +47,7 @@ func Optional(next func(w http.ResponseWriter, r *http.Request)) http.Handler {
 		}
 
 		// Add current user to context
-		ctx := context.WithValue(r.Context(), "user", user)
+		ctx := context.WithValue(r.Context(), userKey, user)
 
 		next(w, r.WithContext(ctx))
 	})
@@ -49,7 +55,7 @@ func Optional(next func(w http.ResponseWriter, r *http.Request)) http.Handler {
 
 // CurrentUser returns the logged in user from the request context
 func CurrentUser(r *http.Request) models.User {
-	return r.Context().Value("user").(models.User)
+	return r.Context().Value(userKey).(models.User)
 }
 
 // UserLoggedIn returns true if a valid user model exists in the request context
