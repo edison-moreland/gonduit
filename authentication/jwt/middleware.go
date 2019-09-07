@@ -26,7 +26,7 @@ func Required(next func(w http.ResponseWriter, r *http.Request)) http.Handler {
 		}
 
 		// Add current user to context
-		ctx := context.WithValue(r.Context(), "user", user)
+		ctx := context.WithValue(r.Context(), userKey, user)
 
 		next(w, r.WithContext(ctx))
 	})
