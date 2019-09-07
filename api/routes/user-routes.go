@@ -165,7 +165,6 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	user.Save()
 
 	// Return updated user
-	w.WriteHeader(http.StatusOK)
 	if err := helpers.MarshalResponseBody(w, http.StatusOK, userResponse{User: user}); err != nil {
 		helpers.Err422(err.Error(), w)
 		return
