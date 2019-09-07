@@ -82,7 +82,7 @@ func (u *User) UpdatePassword(newPassword string) error {
 	// hash and salt password
 	hash, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.MinCost)
 	if err != nil {
-		return fmt.Errorf("Could not hash password. Reason: %v", err.Error())
+		return fmt.Errorf("could not hash password. Reason: %v", err.Error())
 	}
 
 	// Turn it to a string and update field

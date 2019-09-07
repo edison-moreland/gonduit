@@ -34,12 +34,12 @@ func InitializeDB(connection string) error {
 
 	if _dbIsInitialized {
 		// Oops
-		return errors.New("Database already initialized")
+		return errors.New("database already initialized")
 	}
 
 	db, err := gorm.Open("sqlite3", connection)
 	if err != nil {
-		return errors.New("Can't initialize database")
+		return errors.New("can't initialize database")
 	}
 
 	db.LogMode(true)

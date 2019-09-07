@@ -14,19 +14,19 @@ func Login(username, password string) (models.User, error) {
 	user, err := models.GetUser(username)
 	if err != nil {
 		// TODO: Upstream error is getting lost, log it
-		return models.User{}, errors.New("Unknown username/password")
+		return models.User{}, errors.New("unknown username/password")
 	}
 
 	// Check password
 	if !user.CheckPassword(password) {
 		// Password didnt match
-		return models.User{}, errors.New("Unknown username/password")
+		return models.User{}, errors.New("unknown username/password")
 	}
 
 	// User logged in, generate token
 	token, err := jwt.Generate(&user)
 	if err != nil {
-		return models.User{}, fmt.Errorf("Error generating token: %v", token)
+		return models.User{}, fmt.Errorf("error generating token: %v", token)
 	}
 
 	user.Token = token
