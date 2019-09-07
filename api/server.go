@@ -46,7 +46,8 @@ func StartServer(address string) *http.Server {
 
 // StopServer stops an https server with a timeout for existing connections
 func StopServer(server *http.Server, timeout time.Duration) error {
-	ctx, _ := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
 		return fmt.Errorf("failed to shutdown server? Reason %v", err.Error())
 	}
