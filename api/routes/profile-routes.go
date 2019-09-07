@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"encoding/json"
 	"github.com/edison-moreland/gonduit/api/helpers"
 	"github.com/edison-moreland/gonduit/authentication/jwt"
 	"github.com/edison-moreland/gonduit/models"
@@ -41,8 +40,7 @@ func getProfile(w http.ResponseWriter, r *http.Request) {
 	profile := profileUser.GetProfile(following)
 
 	// Write it out
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(profileResponse{Profile: profile}); err != nil {
+	if err := helpers.MarshalResponseBody(w, http.StatusOK, profileResponse{Profile: profile}); err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}
@@ -72,8 +70,7 @@ func followUser(w http.ResponseWriter, r *http.Request) {
 	profile := profileUser.GetProfile(loggedInUser.IsFollowingUser(username))
 
 	// Write it out
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(profileResponse{Profile: profile}); err != nil {
+	if err := helpers.MarshalResponseBody(w, http.StatusOK, profileResponse{Profile: profile}); err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}
@@ -100,8 +97,7 @@ func unfollowUser(w http.ResponseWriter, r *http.Request) {
 	profile := profileUser.GetProfile(loggedInUser.IsFollowingUser(profileUser.Username))
 
 	// Write it out
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(profileResponse{Profile: profile}); err != nil {
+	if err := helpers.MarshalResponseBody(w, http.StatusOK, profileResponse{Profile: profile}); err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}

@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"encoding/json"
 	"github.com/edison-moreland/gonduit/api/helpers"
 	"github.com/edison-moreland/gonduit/authentication"
 	"github.com/edison-moreland/gonduit/authentication/jwt"
@@ -55,8 +54,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return user object
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(userResponse{User: user}); err != nil {
+	if err := helpers.MarshalResponseBody(w, http.StatusOK, userResponse{User: user}); err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}
@@ -105,8 +103,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return new user
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(userResponse{User: user}); err != nil {
+	if err := helpers.MarshalResponseBody(w, http.StatusOK, userResponse{User: user}); err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}
@@ -116,8 +113,7 @@ func currentUser(w http.ResponseWriter, r *http.Request) {
 	// Get current user from context
 	user := jwt.CurrentUser(r)
 
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(userResponse{User: user}); err != nil {
+	if err := helpers.MarshalResponseBody(w, http.StatusOK, userResponse{User: user}); err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}
@@ -176,7 +172,7 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 
 	// Return updated user
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(userResponse{User: user}); err != nil {
+	if err := helpers.MarshalResponseBody(w, http.StatusOK, userResponse{User: user}); err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}

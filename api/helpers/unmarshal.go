@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net/http"
 )
 
 func UnmarshalRequestBody(body io.Reader, object interface{}) error {
@@ -20,4 +21,9 @@ func UnmarshalRequestBody(body io.Reader, object interface{}) error {
 	}
 
 	return nil
+}
+
+func MarshalResponseBody(w http.ResponseWriter, status int, response interface{}) error {
+	w.WriteHeader(status)
+	return json.NewEncoder(w).Encode(response)
 }
