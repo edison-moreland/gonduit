@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// AddProfileRoutes adds all user related routes to a gorilla router
 func AddProfileRoutes(router *mux.Router) {
 	router.Path("/profile/{username}").Methods(http.MethodGet).Handler(jwt.Optional(getProfile)).Name("getprofile")
 	router.Path("/profile/{username}/follow").Methods(http.MethodPost).Handler(jwt.Required(followUser)).Name("followUser")

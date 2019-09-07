@@ -13,6 +13,7 @@ type apiErrorBody struct {
 	Body []string `json:"body"`
 }
 
+// Err422 writes an error in the standard format to the response body
 func Err422(reason string, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusUnprocessableEntity)
 

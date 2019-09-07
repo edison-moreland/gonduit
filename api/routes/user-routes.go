@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// AddUserRoutes adds all user related routes to a gorilla router
 func AddUserRoutes(router *mux.Router) {
 	router.Path("/users/login").Methods(http.MethodPost).HandlerFunc(login).Name("login")
 	router.Path("/users").Methods(http.MethodPost).HandlerFunc(register).Name("register")
