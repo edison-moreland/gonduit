@@ -16,7 +16,7 @@ var _dbIsInitialized = false
 func getDB() *gorm.DB {
 	// First verify database connection exists, and is still alive
 	// Technically these are both recoverable, but I don't want to deal with it
-	if _dbIsInitialized == false {
+	if !_dbIsInitialized {
 		panic("Database isn't initialized!")
 	}
 
@@ -32,7 +32,7 @@ func InitializeDB(connection string) error {
 	// ATM `connection` is just the sqlite path
 	// in the future it will be a real db connection string
 
-	if _dbIsInitialized == true {
+	if _dbIsInitialized {
 		// Oops
 		return errors.New("Database already initialized")
 	}
