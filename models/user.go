@@ -71,11 +71,10 @@ func (u *User) Save() {
 // CheckPassword compares a given password to the users hashed password
 func (u User) CheckPassword(password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(u.Hash), []byte(password))
-	if err != nil {
-		return false
-	}
 
-	return true
+	// The actual error doesn't, we only care if it exists
+	// If there is an error, the password isn't valid
+	return err == nil
 }
 
 // UpdatePassword hashes a new password and updates the stored hash (DOES NOT SAVE TO DB)
