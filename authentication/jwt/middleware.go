@@ -2,9 +2,10 @@ package jwt
 
 import (
 	"context"
-	"github.com/edison-moreland/gonduit/models"
 	"log"
 	"net/http"
+
+	"github.com/edison-moreland/gonduit/models"
 )
 
 // Required ensures token in request and uses token to get current user

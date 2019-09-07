@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/edison-moreland/gonduit/api"
-	"github.com/edison-moreland/gonduit/models"
 	"os"
 	"os/signal"
 	"time"
+
+	"github.com/edison-moreland/gonduit/api"
+	"github.com/edison-moreland/gonduit/models"
 )
 
 // TODO: Move to Viper config

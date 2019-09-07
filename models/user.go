@@ -9,10 +9,10 @@ import (
 
 // Profile is a subset of the user model meant for presentation
 type Profile struct {
-	Username string `json:"username"`
-	Bio string `json:"bio"`
-	Image string `json:"image"`
-	Following bool `json:"following"`
+	Username  string `json:"username"`
+	Bio       string `json:"bio"`
+	Image     string `json:"image"`
+	Following bool   `json:"following"`
 }
 
 // ProfileFromUser creates a new profile object from a user
@@ -110,7 +110,6 @@ func (u *User) UpdateUser(newUser User) {
 	if newUser.Image != "" {
 		u.Image = newUser.Image
 	}
-
 }
 
 // GetProfile returns the profile for a user
@@ -127,9 +126,8 @@ func (u *User) FollowUser(username string) error {
 
 	getDB().Model(&u).Association("Following").Append(userToFollow)
 
-
 	//
-	//u.Following = append(u.Following, userToFollow)
+	// u.Following = append(u.Following, userToFollow)
 	return nil
 }
 

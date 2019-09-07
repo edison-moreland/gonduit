@@ -1,11 +1,12 @@
 package routes
 
 import (
+	"net/http"
+
 	"github.com/edison-moreland/gonduit/api/helpers"
 	"github.com/edison-moreland/gonduit/authentication/jwt"
 	"github.com/edison-moreland/gonduit/models"
 	"github.com/gorilla/mux"
-	"net/http"
 )
 
 func AddProfileRoutes(router *mux.Router) {

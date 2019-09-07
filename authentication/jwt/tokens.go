@@ -27,7 +27,7 @@ func Generate(user *models.User) (string, error) {
 	// Set claims
 	claims := token.Claims.(jwt.MapClaims)
 	claims[jwtUsernameClaim] = user.Username
-	//claims["admin"] = false // No admins, yet
+	// claims["admin"] = false // No admins, yet
 	claims["exp"] = time.Now().Add(jwtTimeToLive).Unix()
 
 	// Sign token
@@ -55,7 +55,6 @@ func Validate(tokenString string) (models.User, error) {
 		// Everything looks good, return signing key
 		return []byte(jwtSigningKey), nil
 	})
-
 	if err != nil {
 		return models.User{}, fmt.Errorf("could not validate token (%v). Reason: %v", tokenString, err.Error())
 	}
@@ -75,7 +74,6 @@ func Validate(tokenString string) (models.User, error) {
 		return user, nil
 	}
 	return models.User{}, fmt.Errorf("could not validate token (%v)", tokenString)
-
 }
 
 // ValidateFromRequest gets token from request headers and validates it

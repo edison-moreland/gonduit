@@ -3,10 +3,11 @@ package api
 import (
 	"context"
 	"fmt"
-	"github.com/edison-moreland/gonduit/api/routes"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/edison-moreland/gonduit/api/routes"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
