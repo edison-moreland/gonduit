@@ -33,7 +33,8 @@ func getProfile(w http.ResponseWriter, r *http.Request) {
 	// If user is logged in, find out if they're following this profile
 	following := false
 	if jwt.UserLoggedIn(r) {
-		following = jwt.CurrentUser(r).IsFollowingUser(username)
+		current := jwt.CurrentUser(r)
+		following = current.IsFollowingUser(username)
 	}
 
 	// Generate profile
