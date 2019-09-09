@@ -43,6 +43,10 @@ func main() {
 	_ = user2.FollowUser(user1.Username)
 	user2.Save()
 
+	// Create test tags
+	tag := models.Tag{Name: "hell ya"}
+	tag.Save()
+
 	println("Added user...")
 
 	// Start https

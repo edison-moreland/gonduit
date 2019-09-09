@@ -25,6 +25,7 @@ func getDB() *gorm.DB {
 
 func migrateModels(db *gorm.DB) {
 	db.AutoMigrate(&User{})
+	db.AutoMigrate(&Tag{})
 }
 
 // InitializeDB create a connection with the database and migrates all models

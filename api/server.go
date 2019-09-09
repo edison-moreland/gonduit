@@ -19,6 +19,7 @@ func createRouter() *mux.Router {
 	// Routes go here
 	routes.AddUserRoutes(router)
 	routes.AddProfileRoutes(router)
+	routes.AddTagRoutes(router)
 
 	return router
 }
