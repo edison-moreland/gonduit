@@ -11,6 +11,6 @@ A Golang + Gorilla implementation of a Conduit backend for [Realworld](https://g
   
 
 - [ ] Articles
-  - [ ] Tags
+  - [x] Tags
   - [ ] Comments
   - [ ] Feed
