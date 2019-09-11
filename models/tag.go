@@ -6,7 +6,7 @@ import (
 
 // Tag describe article content
 type Tag struct {
-	ID   int64  `json:"-" gorm:"unique;not null;primary_key"`
+	ID   uint   `json:"-" gorm:"unique;not null;primary_key"`
 	Name string `json:"name" gorm:"unique;not null"`
 }
 
