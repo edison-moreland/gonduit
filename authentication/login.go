@@ -3,8 +3,8 @@ package authentication
 import (
 	"errors"
 	"fmt"
+	"github.com/edison-moreland/tokenware"
 
-	"github.com/edison-moreland/gonduit/authentication/jwt"
 	"github.com/edison-moreland/gonduit/models"
 )
 
@@ -24,7 +24,7 @@ func Login(username, password string) (models.User, error) {
 	}
 
 	// User logged in, generate token
-	token, err := jwt.Generate(&user)
+	token, err := tokenware.Generate(user.Username)
 	if err != nil {
 		return models.User{}, fmt.Errorf("error generating token: %v", token)
 	}
@@ -36,5 +36,5 @@ func Login(username, password string) (models.User, error) {
 // Logout revokes a users JWT
 func Logout(token string) {
 	// This might have more logic later
-	jwt.Revoke(token)
+	tokenware.Revoke(token)
 }

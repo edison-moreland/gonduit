@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/edison-moreland/tokenware"
 	"os"
 	"os/signal"
 	"time"
@@ -48,6 +49,10 @@ func main() {
 	tag.Save()
 
 	println("Added user...")
+
+	// Initialize Token library
+	// TODO: Un-hardcode signing key
+	tokenware.Configure(tokenware.DefaultSettings("Supersecretkey"))
 
 	// Start https
 	server := api.StartServer(apiAddress)

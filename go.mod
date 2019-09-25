@@ -2,8 +2,11 @@ module github.com/edison-moreland/gonduit
 
 go 1.12
 
+replace github.com/edison-moreland/tokenware => /Volumes/BINGOBANGO/Projects/tokenware
+
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/edison-moreland/tokenware v0.1.0
 	github.com/go-playground/locales v0.12.1 // indirect
 	github.com/go-playground/universal-translator v0.16.0 // indirect
 	github.com/gorilla/handlers v1.4.2
