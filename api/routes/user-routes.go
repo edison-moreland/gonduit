@@ -6,7 +6,6 @@ import (
 
 	"github.com/edison-moreland/gonduit/api/helpers"
 	"github.com/edison-moreland/gonduit/authentication"
-	"github.com/edison-moreland/gonduit/authentication/jwt"
 	"github.com/edison-moreland/gonduit/models"
 	"github.com/gorilla/mux"
 )
@@ -121,7 +120,7 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// Get current user from context
-	user := jwt.CurrentUser(r)
+	user := helpers.CurrentUser(r)
 
 	// Expected body
 	updateBody := struct {

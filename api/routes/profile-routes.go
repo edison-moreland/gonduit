@@ -1,19 +1,19 @@
 package routes
 
 import (
+	"github.com/edison-moreland/tokenware"
 	"net/http"
 
 	"github.com/edison-moreland/gonduit/api/helpers"
-	"github.com/edison-moreland/gonduit/authentication/jwt"
 	"github.com/edison-moreland/gonduit/models"
 	"github.com/gorilla/mux"
 )
 
 // AddProfileRoutes adds all user related routes to a gorilla router
 func AddProfileRoutes(router *mux.Router) {
-	router.Path("/profile/{username}").Methods(http.MethodGet).Handler(jwt.Optional(getProfile)).Name("getprofile")
-	router.Path("/profile/{username}/follow").Methods(http.MethodPost).Handler(jwt.Required(followUser)).Name("followUser")
-	router.Path("/profile/{username}/follow").Methods(http.MethodDelete).Handler(jwt.Required(unfollowUser)).Name("unfollowUser")
+	router.Path("/profile/{username}").Methods(http.MethodGet).Handler(tokenware.Optional(getProfile)).Name("getprofile")
+	router.Path("/profile/{username}/follow").Methods(http.MethodPost).Handler(tokenware.Required(followUser)).Name("followUser")
+	router.Path("/profile/{username}/follow").Methods(http.MethodDelete).Handler(tokenware.Required(unfollowUser)).Name("unfollowUser")
 }
 
 type profileResponse struct {
@@ -33,8 +33,8 @@ func getProfile(w http.ResponseWriter, r *http.Request) {
 
 	// If user is logged in, find out if they're following this profile
 	following := false
-	if jwt.UserLoggedIn(r) {
-		current := jwt.CurrentUser(r)
+	current := helpers.CurrentUser(r)
+	if current.Username != "" {
 		following = current.IsFollowingUser(username)
 	}
 
@@ -42,7 +42,7 @@ func getProfile(w http.ResponseWriter, r *http.Request) {
 	profile := profileUser.GetProfile(following)
 
 	// Write it out
-	if err := helpers.MarshalResponseBody(w, http.StatusOK, profileResponse{Profile: profile}); err != nil {
+	if err = helpers.MarshalResponseBody(w, http.StatusOK, profileResponse{Profile: profile}); err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}
@@ -60,7 +60,7 @@ func followUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Follow user
-	loggedInUser := jwt.CurrentUser(r)
+	loggedInUser := helpers.CurrentUser(r)
 	err = loggedInUser.FollowUser(username)
 	if err != nil {
 		helpers.Err422(err.Error(), w)
@@ -72,7 +72,7 @@ func followUser(w http.ResponseWriter, r *http.Request) {
 	profile := profileUser.GetProfile(loggedInUser.IsFollowingUser(username))
 
 	// Write it out
-	if err := helpers.MarshalResponseBody(w, http.StatusOK, profileResponse{Profile: profile}); err != nil {
+	if err = helpers.MarshalResponseBody(w, http.StatusOK, profileResponse{Profile: profile}); err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}
@@ -87,7 +87,7 @@ func unfollowUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Follow user
-	loggedInUser := jwt.CurrentUser(r)
+	loggedInUser := helpers.CurrentUser(r)
 	err = loggedInUser.UnFollowUser(profileUser.Username)
 	if err != nil {
 		helpers.Err422(err.Error(), w)
@@ -99,7 +99,7 @@ func unfollowUser(w http.ResponseWriter, r *http.Request) {
 	profile := profileUser.GetProfile(loggedInUser.IsFollowingUser(profileUser.Username))
 
 	// Write it out
-	if err := helpers.MarshalResponseBody(w, http.StatusOK, profileResponse{Profile: profile}); err != nil {
+	if err = helpers.MarshalResponseBody(w, http.StatusOK, profileResponse{Profile: profile}); err != nil {
 		helpers.Err422(err.Error(), w)
 		return
 	}
